@@ -43,8 +43,9 @@ server.use(router);
 //Bikin URI dari .env
 const uri: string | any = process.env.MONGODBURI;
 //connect
-mongoose.connect(uri).then(() => {
-  server.listen(port, () => {
-    console.log(`[app]: app is running on port ${port}`); //penanda kalau udah Run
+server.listen(port, () => {
+  console.log(`[app]: app is running on port ${port}`);
+  mongoose.connect(uri, {
+    serverSelectionTimeoutMS: 5000,
   });
 });
