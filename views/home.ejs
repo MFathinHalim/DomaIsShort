@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body class="bg-gray-900">
+    <div class="py-8 px-4 mx-auto max-w-screen-xl lg:py-16 lg:px-6">
+      <div class="mx-auto max-w-screen-sm text-center">
+        <div
+          style="display: flex; justify-content: center; align-items: center">
+          <img
+            src="https://avatars.githubusercontent.com/u/99858315?v=4"
+            class="w-40 rounded-full" />
+        </div>
+        <h1
+          class="mb-4 text-3xl tracking-tight font-extrabold lg:text-6xl text-gray-500">
+          Welcome to Doma Shortcut
+        </h1>
+        <form action="/" method="POST" enctype="application/json" class="flex">
+          <input
+            type="text"
+            id="newpage"
+            name="original"
+            autocomplete="off"
+            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            placeholder="https://www.fathin.my.id"
+            required />
+          <button
+            type="submit"
+            class="ml-1 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-40 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+            Submit
+          </button>
+        </form>
+        <div class="mt-4 p-3 space-y-4">
+          <% data.forEach((entry) => { %>
+          <button
+            onclick="share('<%= entry.short %>')"
+            style="width: 100% !important"
+            class="flex items-center justify-between p-4 bg-gray-800 rounded-lg shadow hover:bg-gray-700 transition duration-200">
+            <a
+              class="text-blue-400 hover:text-blue-200"
+              href="/?short=<%= entry.short %>"
+              ><%= entry.original.substring(0, 30) %>...</a
+            >
+            <a
+              class="text-sm text-gray-400 hover:text-gray-300"
+              href="/?short=<%= entry.short %>"
+              >Short URL: <%= entry.short %></a
+            >
+          </button>
+          <% }); %>
+        </div>
+      </div>
+    </div>
+  </body>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script>
+    function share(short) {
+      const copyText = `${window.location.href}?short=${short}`.replace(
+        "/home",
+        ""
+      );
+      try {
+        window.AndroidShareHandler.share(copyText);
+      } catch {
+        navigator.clipboard.writeText(copyText);
+        Swal.fire({
+          title: "Good job!",
+          text: "Udah Disalin di clipboard :3!",
+          icon: "success",
+        });
+      }
+    }
+  </script>
+</html>

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Redirect</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+      rel="stylesheet" />
+  </head>
+  <body class="bg-gray-900 text-white">
+    <div class="min-h-screen flex items-center justify-center">
+      <div class="container mx-auto px-4">
+        <h1 class="text-center text-4xl font-bold mb-8">
+          Doma Shortcut/<%= isThereInData.short %>
+        </h1>
+        <div class="flex justify-center space-x-4">
+          <button
+            onclick="share('<%= isThereInData.short %>')"
+            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+            Share
+          </button>
+          <a
+            href="<%= isThereInData.original %>"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
+            Open Link
+          </a>
+        </div>
+      </div>
+    </div>
+  </body>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script>
+    function share(short) {
+      const copyText = `${window.location.href}`.replace("/home", "");
+      try {
+        window.AndroidShareHandler.share(copyText);
+      } catch {
+        navigator.clipboard.writeText(copyText);
+        Swal.fire({
+          title: "Good job!",
+          text: "Udah Disalin di clipboard :3!",
+          icon: "success",
+        });
+      }
+    }
+  </script>
+</html>
