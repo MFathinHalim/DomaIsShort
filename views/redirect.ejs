@@ -12,8 +12,12 @@
     <div class="min-h-screen flex items-center justify-center">
       <div class="container mx-auto px-4">
         <h1 class="text-center text-4xl font-bold mb-8">
-          Doma Shortcut/<%= isThereInData.short %>
+          Welcome to the DomaShort
         </h1>
+        <h2
+          id="title"
+          class="text-center text-gray-300 text-3xl font-bold mb-8"
+          data-value="<%= isThereInData.short %>"></h2>
         <div class="flex justify-center space-x-4">
           <button
             onclick="share('<%= isThereInData.short %>')"
@@ -33,6 +37,9 @@
   </body>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <script>
+    const title = document.getElementById("title");
+    title.textContent = window.location.href;
+
     function share(short) {
       const copyText = `${window.location.href}`.replace("/home", "");
       try {

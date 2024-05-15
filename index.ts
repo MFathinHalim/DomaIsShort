@@ -1,5 +1,4 @@
 import type { Express, NextFunction } from "express"; //Import tipe data dari module Express
-import router from "./routes/api"; //* Import api router
 import mongoose from "mongoose"; //? import mongoosenya
 
 //Import modul-modul yang dibutuhkan
@@ -7,6 +6,7 @@ const express = require("express");
 const path = require("path");
 const bodyParser = require("body-parser");
 const cors = require("cors");
+const router = require("./routes/api");
 require("dotenv").config(); //! Config envnya :3
 
 //Persiapan Servernya
@@ -26,8 +26,6 @@ const myMiddleware: any = (req: Request, res: Response, next: NextFunction) => {
   next(); // Panggil next() untuk melanjutkan ke middleware berikutnya atau ke penanganan rute
 };
 
-server.use(myMiddleware);
-
 server.use(bodyParser.json()); //jsonnya
 server.use(
   cors({
@@ -43,9 +41,13 @@ server.use(router);
 //Bikin URI dari .env
 const uri: string | any = process.env.MONGODBURI;
 //connect
+
 server.listen(port, () => {
   console.log(`[app]: app is running on port ${port}`);
   mongoose.connect(uri, {
+    // @ts-ignore: Unreachable code error
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
     serverSelectionTimeoutMS: 5000,
   });
 });

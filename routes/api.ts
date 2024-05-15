@@ -31,18 +31,16 @@ const router: routerType = Router(); //Bikin routernya
 router
   .route("/")
   .get((req: Request, res: Response, next: NextFunction) => {
-    next();
     //ini buat get
     const { short }: any = req.query; //dapatin ?short=
     const isThereInData: dataType | undefined = data.find(
       (entry) => entry.short == short
     ); //cek dulu ada atau enggak
-    if (isThereInData)
-      return res.status(200).render("redirect", { isThereInData });
-    return res.status(404).render("not-found"); //gak ketemu
+    if (isThereInData) res.status(200).render("redirect", { isThereInData });
+    res.status(404).render("not-found"); //gak ketemu
+    next();
   })
   .post(async (req: Request, res: Response, next: NextFunction) => {
-    next();
     //buat post
     const original: any = req.body.original;
     //lalu bikin shortnya uuidv4
@@ -52,24 +50,25 @@ router
     ); //kayak tadi, di cek ada gak(bedanya ini original)
     if (isThereInData)
       //kalau ada
-      return res.status(200).render("redirect", { isThereInData });
+      res.status(200).render("redirect", { isThereInData });
     const result: dataType = {
       original,
       short,
     }; // ini hasilnya nanti dikumpulin
     data.push(result);
     await dataModel.create(result);
-    return res.status(200).render("redirect", { isThereInData: result });
+    res.status(200).render("redirect", { isThereInData: result });
+    next();
   });
 
 router.get("/home", (req: Request, res: Response, next: NextFunction) => {
-  next();
   res.status(200).render("home", { data: data }); //buat /home :3
+  next();
 });
 
 router.get("*", (req: Request, res: Response, next: NextFunction) => {
-  next();
   res.status(404).render("not-found"); //kalau nyasar pagenya, dia ke 404 not found
+  next();
 });
 
-export default router; //* Export hasilnya
+module.exports = router; //* Export hasilnya
