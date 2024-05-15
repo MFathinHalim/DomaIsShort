@@ -1,12 +1,17 @@
 //import tipe data router sebagai routerType
-import type { Router as routerType, Request, Response } from "express";
+import type {
+  Router as routerType,
+  Request,
+  Response,
+  NextFunction,
+} from "express";
 import type { dataType } from "../types/dataType";
-import { v4 as uuidv4 } from "uuid"; //? yang ini import uuid buat randomize
 
 const { Router } = require("express");
 const { dataModel } = require("../models/dataModel"); //import model dari datanya :3
+const { v4: uuidv4 } = require("uuid"); //? yang ini import uuid buat randomize
 
-let data: dataType[];
+let data: dataType[] = [];
 dataModel
   .find({}) //dapatin semua datanya ( 0w0 )
   .then((docs: dataType[]) => {
@@ -25,7 +30,8 @@ const router: routerType = Router(); //Bikin routernya
 //? Router buat '/'
 router
   .route("/")
-  .get((req: Request, res: Response) => {
+  .get((req: Request, res: Response, next: NextFunction) => {
+    next();
     //ini buat get
     const { short }: any = req.query; //dapatin ?short=
     const isThereInData: dataType | undefined = data.find(
@@ -35,7 +41,8 @@ router
       return res.status(200).render("redirect", { isThereInData });
     return res.status(404).render("not-found"); //gak ketemu
   })
-  .post(async (req: Request, res: Response) => {
+  .post(async (req: Request, res: Response, next: NextFunction) => {
+    next();
     //buat post
     const original: any = req.body.original;
     //lalu bikin shortnya uuidv4
@@ -55,15 +62,14 @@ router
     return res.status(200).render("redirect", { isThereInData: result });
   });
 
-router.get(
-  "/home",
-  (req: Request, res: Response) =>
-    res.status(200).render("home", { data: data }) //buat /home :3
-);
+router.get("/home", (req: Request, res: Response, next: NextFunction) => {
+  next();
+  res.status(200).render("home", { data: data }); //buat /home :3
+});
 
-router.get(
-  "*",
-  (req: Request, res: Response) => res.status(404).render("not-found") //kalau nyasar pagenya, dia ke 404 not found
-);
+router.get("*", (req: Request, res: Response, next: NextFunction) => {
+  next();
+  res.status(404).render("not-found"); //kalau nyasar pagenya, dia ke 404 not found
+});
 
 export default router; //* Export hasilnya

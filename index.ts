@@ -1,4 +1,4 @@
-import type { Express } from "express"; //Import tipe data dari module Express
+import type { Express, NextFunction } from "express"; //Import tipe data dari module Express
 import router from "./routes/api"; //* Import api router
 import mongoose from "mongoose"; //? import mongoosenya
 
@@ -21,6 +21,13 @@ server.use(
     extended: true,
   })
 ); //buat body parser encoded
+const myMiddleware: any = (req: Request, res: Response, next: NextFunction) => {
+  // Lakukan tugas middleware di sini
+  next(); // Panggil next() untuk melanjutkan ke middleware berikutnya atau ke penanganan rute
+};
+
+server.use(myMiddleware);
+
 server.use(bodyParser.json()); //jsonnya
 server.use(
   cors({
