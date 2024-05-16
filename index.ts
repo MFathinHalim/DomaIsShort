@@ -21,10 +21,6 @@ server.use(
     extended: true,
   })
 ); //buat body parser encoded
-const myMiddleware: any = (req: Request, res: Response, next: NextFunction) => {
-  // Lakukan tugas middleware di sini
-  next(); // Panggil next() untuk melanjutkan ke middleware berikutnya atau ke penanganan rute
-};
 
 server.use(bodyParser.json()); //jsonnya
 server.use(
