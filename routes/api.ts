@@ -10,6 +10,9 @@ import type { dataType } from "../types/dataType";
 const { Router } = require("express");
 const { dataModel } = require("../models/dataModel"); //import model dari datanya :3
 const { v4: uuidv4 } = require("uuid"); //? yang ini import uuid buat randomize
+const axios = require("axios"); //import axios buat fetch data Captcha
+const dotenv = require("dotenv");
+dotenv.config();
 
 let data: dataType[] = [];
 dataModel
@@ -41,6 +44,15 @@ router
     next();
   })
   .post(async (req: Request, res: Response, next: NextFunction) => {
+    //captcha dulu abangkuh
+    const token: any = req.body["g-recaptcha-response"];
+    const response: any = await axios.post(
+      `https://www.google.com/recaptcha/api/siteverify?secret=${process.env.GOOGLE_RECAPTCHA_SECRET_KEY}&response=${token}`
+    ); //fetch datanya dulu :3
+    if (!response.data.success) {
+      res.json({ msg: "reCAPTCHA tidak valid" }); //! Kalau misalnya error, maka dia kirim reCAPTCHA tidak valid
+      next(); //? next
+    }
     //buat post
     const original: any = req.body.original;
     //lalu bikin shortnya uuidv4
